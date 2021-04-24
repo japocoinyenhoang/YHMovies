@@ -2,8 +2,11 @@ package com.yenhoang.yhmovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import com.yenhoang.yhmovies.databinding.ActivityMainBinding
+import com.yenhoang.yhmovies.model.MovieDbClient
+import kotlin.concurrent.thread
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -46,5 +49,15 @@ class MainActivity : AppCompatActivity() {
                     }
                 }
         )
+
+                thread {
+                    //val apiKey = this.resources.getString(R.string.api_key) pero mejoor:
+                    val apiKey = getString(R.string.api_key)
+                    val popularMovies = MovieDbClient.service.listPopularMovies(apiKey)
+                    val body = popularMovies.execute().body()
+                    if(body != null)
+                    Log.d("MainActivity", "Movie count: ${body.results.size}")
+                }
+
     }
 }
