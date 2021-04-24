@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.yenhoang.yhmovies.databinding.ViewMovieItemBinding
 
 
@@ -18,6 +19,10 @@ class MoviesAdapter(private val movies: List<Movie>): RecyclerView.Adapter<Movie
     class ViewHolder( private val binding: ViewMovieItemBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(movie: Movie){
             binding.movieTitle.text = movie.title
+            Glide.with(binding.root.context)
+                    .load(movie.cover)
+                    .into(binding.cover)
+
         }
     }
 
