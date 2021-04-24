@@ -1,20 +1,21 @@
 package com.yenhoang.yhmovies
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.yenhoang.yhmovies.databinding.ViewMovieItemBinding
+import com.yenhoang.yhmovies.model.Movie
 
 interface MovieClickedListener {
-    fun onMovieClicked(movie :Movie)   // Labda =>  (Movie) -> Unit y sustituirlo tanto aqui como en la minaActivity con {}
+    fun onMovieClicked(movie : Movie)   // Labda =>  (Movie) -> Unit y sustituirlo tanto aqui como en la minaActivity con {}
 }
 // teien que extender de una clase especifica que se llama RecicletView.Adapter y a su vez necesita un viewHolder ya que nos pide el tipo en <>
 // despues de crear la clase Movie le decimos que va a recibir  "(private val movies: List<Movie>)"
 // tb hay que crear un nuevo layout que represente cada elemento de la lista  yque va a inflar la vista el moviesAdapter
-class MoviesAdapter(private val movies: List<Movie>,
-                    private val MovieClickedListener: MovieClickedListener): RecyclerView.Adapter<MoviesAdapter.ViewHolder> () {
+class MoviesAdapter(var movies: List<Movie>,
+                    private val MovieClickedListener: (Movie) ->Unit
+): RecyclerView.Adapter<MoviesAdapter.ViewHolder> () {
 
     // x otro lado el ViewHolder recibe una vista "(view: View)"
     //el ViewHolder es el componente dentro del adapter que va a contener la vista
@@ -23,7 +24,7 @@ class MoviesAdapter(private val movies: List<Movie>,
         fun bind(movie: Movie){
             binding.movieTitle.text = movie.title
             Glide.with(binding.root.context)
-                    .load(movie.cover)
+                    .load("https://image.tmdb.org/t/p/w185/${movie.poster_path}")
                     .into(binding.cover)
 
         }
@@ -44,7 +45,7 @@ class MoviesAdapter(private val movies: List<Movie>,
         // este va a actualizar una vista cuando el adapter se lo pida
         val movie =(movies[position])
         holder.bind(movie)
-        holder.itemView.setOnClickListener{ MovieClickedListener.onMovieClicked(movie)}
+        holder.itemView.setOnClickListener{ MovieClickedListener(movie)}
 
     }
 

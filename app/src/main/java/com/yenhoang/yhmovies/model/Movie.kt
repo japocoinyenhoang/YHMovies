@@ -1,6 +1,6 @@
 package com.yenhoang.yhmovies.model
 
-data class MovieBd(
+data class Movie(
     val adult: Boolean,
     val backdrop_path: String,
     val genre_ids: List<Int>,

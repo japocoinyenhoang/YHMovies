@@ -33,31 +33,25 @@ class MainActivity : AppCompatActivity() {
 
         //el adapter es el qie identifica como se va a pintar dentro del reciclerView
         //tenemos que crear una clase que en este caso llamaremos MoviesAdapter
-        binding.recycler.adapter = MoviesAdapter(
-                listOf(
-                        Movie("Title 1", "https://loremflickr.com/320/240?lock=1"),
-                        Movie("Title 2", "https://loremflickr.com/320/240?lock=2"),
-                        Movie("Title 3", "https://loremflickr.com/320/240?lock=3"),
-                        Movie("Title 4", "https://loremflickr.com/320/240?lock=4"),
-                        Movie("Title 6", "https://loremflickr.com/320/240?lock=6"),
-                        Movie("Title 7", "https://loremflickr.com/320/240?lock=7"),
-                        Movie("Title 8", "https://loremflickr.com/320/240?lock=8")
-                ),
-                object : MovieClickedListener {
-                    override fun onMovieClicked(movie: Movie) {
-                        Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
-                    }
-                }
-        )
 
-                thread {
-                    //val apiKey = this.resources.getString(R.string.api_key) pero mejoor:
-                    val apiKey = getString(R.string.api_key)
-                    val popularMovies = MovieDbClient.service.listPopularMovies(apiKey)
-                    val body = popularMovies.execute().body()
-                    if(body != null)
-                    Log.d("MainActivity", "Movie count: ${body.results.size}")
-                }
+
+        val moviesAdapter = MoviesAdapter(emptyList()) { movie ->
+            Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
+        }
+        binding.recycler.adapter = moviesAdapter
+        thread {
+            //val apiKey = this.resources.getString(R.string.api_key) pero mejoor:
+            val apiKey = getString(R.string.api_key)
+            val popularMovies = MovieDbClient.service.listPopularMovies(apiKey)
+            val body = popularMovies.execute().body()
+
+            runOnUiThread {
+                if (body != null)
+                    //Log.d("MainActivity", "Movie count: ${body.results.size}")
+                        moviesAdapter.movies = body.results
+                    moviesAdapter.notifyDataSetChanged()
+            }
+        }
 
     }
 }
