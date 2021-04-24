@@ -2,6 +2,7 @@ package com.yenhoang.yhmovies
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.yenhoang.yhmovies.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
@@ -38,7 +39,12 @@ class MainActivity : AppCompatActivity() {
                         Movie("Title 6", "https://loremflickr.com/320/240?lock=6"),
                         Movie("Title 7", "https://loremflickr.com/320/240?lock=7"),
                         Movie("Title 8", "https://loremflickr.com/320/240?lock=8")
-                )
+                ),
+                object : MovieClickedListener {
+                    override fun onMovieClicked(movie: Movie) {
+                        Toast.makeText(this@MainActivity, movie.title, Toast.LENGTH_LONG).show()
+                    }
+                }
         )
     }
 }

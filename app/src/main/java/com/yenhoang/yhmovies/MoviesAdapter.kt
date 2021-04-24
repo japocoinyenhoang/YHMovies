@@ -7,11 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.yenhoang.yhmovies.databinding.ViewMovieItemBinding
 
-
+interface MovieClickedListener {
+    fun onMovieClicked(movie :Movie)   // Labda =>  (Movie) -> Unit y sustituirlo tanto aqui como en la minaActivity con {}
+}
 // teien que extender de una clase especifica que se llama RecicletView.Adapter y a su vez necesita un viewHolder ya que nos pide el tipo en <>
 // despues de crear la clase Movie le decimos que va a recibir  "(private val movies: List<Movie>)"
 // tb hay que crear un nuevo layout que represente cada elemento de la lista  yque va a inflar la vista el moviesAdapter
-class MoviesAdapter(private val movies: List<Movie>): RecyclerView.Adapter<MoviesAdapter.ViewHolder> () {
+class MoviesAdapter(private val movies: List<Movie>,
+                    private val MovieClickedListener: MovieClickedListener): RecyclerView.Adapter<MoviesAdapter.ViewHolder> () {
 
     // x otro lado el ViewHolder recibe una vista "(view: View)"
     //el ViewHolder es el componente dentro del adapter que va a contener la vista
@@ -39,7 +42,10 @@ class MoviesAdapter(private val movies: List<Movie>): RecyclerView.Adapter<Movie
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         // este va a actualizar una vista cuando el adapter se lo pida
-        holder.bind(movies[position])
+        val movie =(movies[position])
+        holder.bind(movie)
+        holder.itemView.setOnClickListener{ MovieClickedListener.onMovieClicked(movie)}
+
     }
 
     override fun getItemViewType(position: Int): Int {
